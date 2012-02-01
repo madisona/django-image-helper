@@ -1,0 +1,9 @@
+
+Django Image Helper
+
+Provides a model mixin that has 'image' and 'thumbnail' fields.
+The uploaded image will be scaled to the model's 'IMAGE_SIZE' and
+a thumbnail will be scaled and saved to the model's 'THUMBNAIL_SIZE'.
+
+Additionally, there is an admin mixin to help you display an image's thumbnail
+when in the admin's listview.
