@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 REQUIREMENTS = (
     'django>=1.3',
-    'PIL',
+    'Pillow==1.7.6', # a friendlier to install fork of PIL
 )
 
 from image_helper import VERSION
