@@ -11,5 +11,8 @@ dist/*
 # vim swp files
 *.swp
 
+local.db
+example/media/*
+
 
 
