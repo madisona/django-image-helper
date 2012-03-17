@@ -10,6 +10,17 @@ when in the admin's listview.
 
 RELEASE NOTES:
 
+  version 0.1.1
+  -------------
+  Added AdminImagePreviewWidget. This will show a preview of the image in the
+  admin change_form view in addition to the link the admin already shows.
+
+  To enable, add the following to your ModelAdmin. ::
+
+      formfield_overrides = {
+          SizedImageField: {'widget': AdminImagePreviewWidget},
+      }
+
   version 0.1.0
   -------------
   Added SizedImageField. This lets you do the same thing the ``ImageMixin``
