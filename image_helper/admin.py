@@ -1,4 +1,10 @@
 
+import warnings
+warnings.warn(
+    "This mixin is deprecated. it will be going away soon.", PendingDeprecationWarning
+)
+
+
 class ImageAdminMixin(object):
     """
     Add this Mixin to your model Admin. Then in the list_display,
