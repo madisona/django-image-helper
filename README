@@ -1,4 +1,3 @@
-
 Django Image Helper
 
 Provides a model mixin that has 'image' and 'thumbnail' fields.
@@ -30,7 +29,7 @@ RELEASE NOTES:
   See the example project for a working sample. The basics:
 
   class MyModel(models.Model):
-    image = fields.SidedImageField(upload_to="the_directory", size=(500, 500), thumbnail_size=(200, 200))
+    image = fields.SizedImageField(upload_to="the_directory", size=(500, 500), thumbnail_size=(200, 200))
 
 
   Then you can access both the image and thumbnail in code or templates by:
