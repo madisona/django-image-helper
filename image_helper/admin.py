@@ -1,8 +1,5 @@
-
 import warnings
-warnings.warn(
-    "This mixin is deprecated. it will be going away soon.", PendingDeprecationWarning
-)
+warnings.warn("This mixin is deprecated. it will be going away soon.", PendingDeprecationWarning)
 
 
 class ImageAdminMixin(object):
@@ -13,4 +10,5 @@ class ImageAdminMixin(object):
 
     def listview_thumbnail(self, obj):
         return "<img src='%s' height='100' />" % obj.thumbnail.url
+
     listview_thumbnail.allow_tags = True

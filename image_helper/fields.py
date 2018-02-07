@@ -1,4 +1,3 @@
-
 import os
 from cStringIO import StringIO
 import mimetypes
@@ -10,6 +9,7 @@ from django.db.models import signals
 from PIL import Image
 
 # todo: Add 'delete_with_model' option that will delete thumbnail and image when model is deleted.
+
 
 class ThumbnailField(object):
     """
@@ -39,8 +39,16 @@ class SizedImageField(ImageField):
     An Image field that allows auto resizing auto creation of thumbnails.
     """
 
-    def __init__(self, verbose_name=None, name=None, width_field=None,
-                       height_field=None, size=None, thumbnail_size=None, **kwargs):
+    def __init__(
+        self,
+        verbose_name=None,
+        name=None,
+        width_field=None,
+        height_field=None,
+        size=None,
+        thumbnail_size=None,
+        **kwargs
+    ):
         """
         Added fields:
             - size: a tuple containing width and height to resize image, and
@@ -66,7 +74,7 @@ class SizedImageField(ImageField):
         """
         if dimensions and isinstance(dimensions, (tuple, list)):
             if len(dimensions) < 3:
-                dimensions = tuple(dimensions) + (False,)
+                dimensions = tuple(dimensions) + (False, )
             return dimensions
 
     def contribute_to_class(self, cls, name):
@@ -162,7 +170,7 @@ class SizedImageField(ImageField):
 
         temp_handle = StringIO()
         image.save(temp_handle, self._get_pil_format(extension))
-        temp_handle.seek(0) # rewind the file
+        temp_handle.seek(0)  # rewind the file
 
         suf = SimpleUploadedFile(
             file_name,

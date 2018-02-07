@@ -1,10 +1,6 @@
 
 from setuptools import setup, find_packages
 
-REQUIREMENTS = (
-    'django>=1.3',
-    'Pillow==1.7.6', # a friendlier to install fork of PIL
-)
 
 from image_helper import VERSION
 
@@ -16,7 +12,7 @@ setup(
     long_description=open('README', 'r').read(),
     url="https://github.com/madisona/django-image-helper",
     packages=find_packages(exclude=["example"]),
-    install_requires=REQUIREMENTS,
+    install_requires=open('requirements/requirements.txt').read().split('\n'),
     zip_safe=False,
     classifiers = [
         "Development Status :: 4 - Beta",

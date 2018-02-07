@@ -1,4 +1,3 @@
-
 from cStringIO import StringIO
 import mimetypes
 import os
@@ -7,6 +6,7 @@ from PIL import Image
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
+
 
 class ImageMixin(models.Model):
     """
@@ -21,7 +21,7 @@ class ImageMixin(models.Model):
         upload_to='images',
         width_field='image_width',
         height_field='image_height',
-        )
+    )
     image_url = models.URLField(editable=False)
     image_width = models.IntegerField(auto_created=True)
     image_height = models.IntegerField(auto_created=True)
@@ -30,7 +30,7 @@ class ImageMixin(models.Model):
         upload_to='thumbnails',
         width_field='thumbnail_width',
         height_field='thumbnail_height',
-        )
+    )
     thumbnail_url = models.URLField(editable=False)
     thumbnail_width = models.IntegerField(auto_created=True)
     thumbnail_height = models.IntegerField(auto_created=True)
@@ -75,13 +75,13 @@ class ImageMixin(models.Model):
 
         temp_handle = StringIO()
         image.save(temp_handle, self._get_pil_format(extension))
-        temp_handle.seek(0) # rewind the file
+        temp_handle.seek(0)  # rewind the file
 
         suf = SimpleUploadedFile(
             file_name,
             temp_handle.read(),
             content_type=content_type,
-            )
+        )
         return suf
 
     def _get_pil_format(self, extension):
