@@ -16,7 +16,8 @@ class AdminImagePreviewWidget(AdminFileWidget):
 
     def _get_preview_tag(self, value):
         if value and hasattr(value, "url"):
-            return '<p class="file-upload current-file-preview">Current Preview:<br /><img src="{0}" style="max-width: 300px;" /></p>'.format(
+            return '<p class="file-upload current-file-preview">Current Preview:<br />' \
+                   '<img src="{0}" style="max-width: 300px;" /></p>'.format(
                 value.url
             )
         return ''
