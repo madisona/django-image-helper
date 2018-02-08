@@ -19,12 +19,15 @@ class SizedImageFieldTests(test.TestCase):
     def tearDown(self):
         shutil.rmtree(os.path.join(settings.MEDIA_ROOT, "test_images"))
 
-    def test_saves_image(self):
-        upload_file = SimpleUploadedFile(
+    def _get_simple_uploaded_file(self):
+        return SimpleUploadedFile(
             "sample_photo.png",
             open(join(dirname(__file__), "test_app/sample_photo.png"), 'rb').read(),
             content_type="image/png"
         )
+
+    def test_saves_image_and_thumbnail(self):
+        upload_file = self._get_simple_uploaded_file()
         m = TestModel(image=upload_file)
         m.save()
 
@@ -32,18 +35,7 @@ class SizedImageFieldTests(test.TestCase):
         self.assertEqual("test_images/sample_photo.png", model.image.name)
         self.assertEqual("{}test_images/sample_photo.png".format(settings.MEDIA_URL), model.image.url)
         self.assertEqual("{}/test_images/sample_photo.png".format(settings.MEDIA_ROOT), model.image.path)
-        self.assertEqual(25822, model.image.size)
 
-    def test_saves_thumbnail(self):
-        upload_file = SimpleUploadedFile(
-            "sample_photo.png",
-            open(join(dirname(__file__), "test_app/sample_photo.png"), 'rb').read(),
-            content_type="image/png"
-        )
-        m = TestModel(image=upload_file)
-        m.save()
-
-        model = TestModel.objects.get(pk=1)
         self.assertEqual("test_images/sample_photo-thumbnail.png", model.image.thumbnail.name)
         self.assertEqual(
             "{}test_images/sample_photo-thumbnail.png".format(settings.MEDIA_URL), model.image.thumbnail.url
@@ -51,4 +43,3 @@ class SizedImageFieldTests(test.TestCase):
         self.assertEqual(
             "{}/test_images/sample_photo-thumbnail.png".format(settings.MEDIA_ROOT), model.image.thumbnail.path
         )
-        self.assertEqual(6764, model.image.thumbnail.size)
