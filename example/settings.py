@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'sample',
+    'image_helper.tests.test_app.apps.TestAppConfig',
 )
 
 # A sample logging configuration. The only tangible logging
