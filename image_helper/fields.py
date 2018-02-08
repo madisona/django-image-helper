@@ -16,7 +16,12 @@ from PIL import Image
 class ThumbnailField(object):
     """
     Instances of this class will be used to access data of the
-    generated thumbnails
+    generated thumbnails. A thumbnail is created when the image is saved
+    initially, but there's nothing persisted that references the thumbnail.
+    When the `SizedImageField` is instantiated, it gets this thumbnail
+    field attached to it where the thumbnail becomes accessible.
+
+    for example: `image.thumbnail.url`
     """
 
     def __init__(self, name, storage):
@@ -151,8 +156,7 @@ class SizedImageField(ImageField):
         """
         image_field = getattr(instance, self.name)
         if image_field:
-            filename = self.generate_filename(instance, image_field.name)
-            thumbnail_filename = self._get_thumbnail_filename(filename)
+            thumbnail_filename = self._get_thumbnail_filename(image_field.name)
 
             thumbnail_field = ThumbnailField(thumbnail_filename, self.storage)
             setattr(image_field, 'thumbnail', thumbnail_field)

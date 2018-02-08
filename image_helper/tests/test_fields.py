@@ -8,16 +8,18 @@ from django.core.management import call_command
 from django.conf import settings
 
 from image_helper.tests.test_app.models import TestModel
+from image_helper.fields import SizedImageField
 
 
-@test.override_settings(INSTALLED_APPS=['image_helper.tests.test_app'])
 class SizedImageFieldTests(test.TestCase):
 
     def setUp(self):
         call_command("migrate", verbosity=0)
 
     def tearDown(self):
-        shutil.rmtree(os.path.join(settings.MEDIA_ROOT, "test_images"))
+        test_images_path = os.path.join(settings.MEDIA_ROOT, "test_images")
+        if os.path.exists(test_images_path):
+            shutil.rmtree(test_images_path)
 
     def _get_simple_uploaded_file(self):
         return SimpleUploadedFile(
@@ -43,3 +45,8 @@ class SizedImageFieldTests(test.TestCase):
         self.assertEqual(
             "{}/test_images/sample_photo-thumbnail.png".format(settings.MEDIA_ROOT), model.image.thumbnail.path
         )
+
+    def test_get_thumbnail_filename(self):
+        f = SizedImageField()
+        thumbnail_name = f._get_thumbnail_filename("my_image.jpg")
+        self.assertEqual("my_image-thumbnail.jpg", thumbnail_name)
