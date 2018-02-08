@@ -1,5 +1,7 @@
 import os
-from cStringIO import StringIO
+
+from io import BytesIO
+
 import mimetypes
 
 from django.db.models.fields.files import ImageField
@@ -24,12 +26,15 @@ class ThumbnailField(object):
         self.name = name
         self.storage = storage
 
+    @property
     def path(self):
         return self.storage.path(self.name)
 
+    @property
     def url(self):
         return self.storage.url(self.name)
 
+    @property
     def size(self):
         return self.storage.size(self.name)
 
@@ -168,7 +173,7 @@ class SizedImageField(ImageField):
         mimetype, encoding = mimetypes.guess_type(file_name)
         content_type = mimetype or 'image/png'
 
-        temp_handle = StringIO()
+        temp_handle = BytesIO()
         image.save(temp_handle, self._get_pil_format(extension))
         temp_handle.seek(0)  # rewind the file
 
