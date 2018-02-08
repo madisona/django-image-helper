@@ -1,6 +1,7 @@
-
 import os
-from cStringIO import StringIO
+
+from io import BytesIO
+
 import mimetypes
 
 from django.db.models.fields.files import ImageField
@@ -11,10 +12,24 @@ from PIL import Image
 
 # todo: Add 'delete_with_model' option that will delete thumbnail and image when model is deleted.
 
+
+def _get_thumbnail_filename(filename, append_text="-thumbnail"):
+    """
+    Returns a thumbnail version of the file name.
+    """
+    name, ext = os.path.splitext(filename)
+    return ''.join([name, append_text, ext])
+
+
 class ThumbnailField(object):
     """
     Instances of this class will be used to access data of the
-    generated thumbnails
+    generated thumbnails. A thumbnail is created when the image is saved
+    initially, but there's nothing persisted that references the thumbnail.
+    When the `SizedImageField` is instantiated, it gets this thumbnail
+    field attached to it where the thumbnail becomes accessible.
+
+    for example: `image.thumbnail.url`
     """
 
     def __init__(self, name, storage):
@@ -24,12 +39,15 @@ class ThumbnailField(object):
         self.name = name
         self.storage = storage
 
+    @property
     def path(self):
         return self.storage.path(self.name)
 
+    @property
     def url(self):
         return self.storage.url(self.name)
 
+    @property
     def size(self):
         return self.storage.size(self.name)
 
@@ -39,8 +57,16 @@ class SizedImageField(ImageField):
     An Image field that allows auto resizing auto creation of thumbnails.
     """
 
-    def __init__(self, verbose_name=None, name=None, width_field=None,
-                       height_field=None, size=None, thumbnail_size=None, **kwargs):
+    def __init__(
+        self,
+        verbose_name=None,
+        name=None,
+        width_field=None,
+        height_field=None,
+        size=None,
+        thumbnail_size=None,
+        **kwargs
+    ):
         """
         Added fields:
             - size: a tuple containing width and height to resize image, and
@@ -66,7 +92,7 @@ class SizedImageField(ImageField):
         """
         if dimensions and isinstance(dimensions, (tuple, list)):
             if len(dimensions) < 3:
-                dimensions = tuple(dimensions) + (False,)
+                dimensions = tuple(dimensions) + (False, )
             return dimensions
 
     def contribute_to_class(self, cls, name):
@@ -82,28 +108,28 @@ class SizedImageField(ImageField):
         """
         file = getattr(model_instance, self.attname)
         if file and not file._committed:
+            file.name = self._clean_file_name(model_instance, file.name)
             file.file = self._resize_image(model_instance, file)
             file.save(file.name, file, save=False)
         return file
 
-    def _get_thumbnail_filename(self, filename):
+    def _clean_file_name(self, model_instance, filename):
         """
-        Returns a thumbnail version of the file name.
+        We need to make sure we know the full file name before we save the thumbnail so
+        we can be sure the name doesn't change on save.
+
+        This method gets the available filename and returns just the file part.
         """
-        name, ext = os.path.splitext(filename)
-        return ''.join([name, '-thumbnail', ext])
+        available_name = self.storage.get_available_name(self.generate_filename(model_instance, filename))
+        return os.path.basename(available_name)
 
     def _create_thumbnail(self, model_instance, thumbnail, image_name):
         """
-        Because of how we are using the base file name as a reference to the
-        thumbnail and not storing it off anywhere, we need to make sure to
-        run the name through the storage's `get_available_name` so the name
-        doesn't change once we actually save it.
+        Resizes and saves the thumbnail image
         """
         thumbnail = self._do_resize(thumbnail, self.thumbnail_size)
-
-        full_image_name = self.storage.get_available_name(self.generate_filename(model_instance, image_name))
-        thumbnail_filename = self._get_thumbnail_filename(full_image_name)
+        full_image_name = self.generate_filename(model_instance, image_name)
+        thumbnail_filename = _get_thumbnail_filename(full_image_name)
         thumb = self._get_simple_uploaded_file(thumbnail, thumbnail_filename)
         self.storage.save(thumbnail_filename, thumb)
 
@@ -138,8 +164,7 @@ class SizedImageField(ImageField):
         """
         image_field = getattr(instance, self.name)
         if image_field:
-            filename = self.generate_filename(instance, image_field.name)
-            thumbnail_filename = self._get_thumbnail_filename(filename)
+            thumbnail_filename = _get_thumbnail_filename(image_field.name)
 
             thumbnail_field = ThumbnailField(thumbnail_filename, self.storage)
             setattr(image_field, 'thumbnail', thumbnail_field)
@@ -160,9 +185,9 @@ class SizedImageField(ImageField):
         mimetype, encoding = mimetypes.guess_type(file_name)
         content_type = mimetype or 'image/png'
 
-        temp_handle = StringIO()
+        temp_handle = BytesIO()
         image.save(temp_handle, self._get_pil_format(extension))
-        temp_handle.seek(0) # rewind the file
+        temp_handle.seek(0)  # rewind the file
 
         suf = SimpleUploadedFile(
             file_name,

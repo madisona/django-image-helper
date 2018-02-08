@@ -2,6 +2,7 @@ from django.db import models
 
 from image_helper.fields import SizedImageField
 
+
 # Create your models here.
 class TestModel(models.Model):
     name = models.CharField(max_length=20)
