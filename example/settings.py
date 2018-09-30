@@ -97,7 +97,7 @@ TEMPLATES = [
 SECRET_KEY = 'zke83e4zrq*3!&*)&oqx0cq18t3*oc@z3u*u@1w%1&c0=rihp#'
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

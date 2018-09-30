@@ -57,16 +57,14 @@ class SizedImageField(ImageField):
     An Image field that allows auto resizing auto creation of thumbnails.
     """
 
-    def __init__(
-        self,
-        verbose_name=None,
-        name=None,
-        width_field=None,
-        height_field=None,
-        size=None,
-        thumbnail_size=None,
-        **kwargs
-    ):
+    def __init__(self,
+                 verbose_name=None,
+                 name=None,
+                 width_field=None,
+                 height_field=None,
+                 size=None,
+                 thumbnail_size=None,
+                 **kwargs):
         """
         Added fields:
             - size: a tuple containing width and height to resize image, and
@@ -82,7 +80,8 @@ class SizedImageField(ImageField):
         self.size = self._get_resize_options(size)
         self.thumbnail_size = self._get_resize_options(thumbnail_size)
 
-        super(SizedImageField, self).__init__(verbose_name, name, width_field, height_field, **kwargs)
+        super(SizedImageField, self).__init__(verbose_name, name, width_field,
+                                              height_field, **kwargs)
 
     def _get_resize_options(self, dimensions):
         """
@@ -120,7 +119,8 @@ class SizedImageField(ImageField):
 
         This method gets the available filename and returns just the file part.
         """
-        available_name = self.storage.get_available_name(self.generate_filename(model_instance, filename))
+        available_name = self.storage.get_available_name(
+            self.generate_filename(model_instance, filename))
         return os.path.basename(available_name)
 
     def _create_thumbnail(self, model_instance, thumbnail, image_name):

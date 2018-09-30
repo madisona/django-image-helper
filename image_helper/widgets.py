@@ -10,8 +10,9 @@ class AdminImagePreviewWidget(AdminFileWidget):
     def __init__(self, attrs=None, storage=None):
         super(AdminImagePreviewWidget, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
-        content = super(AdminImagePreviewWidget, self).render(name, value, attrs)
+    def render(self, name, value, attrs=None, **kwargs):
+        content = super(AdminImagePreviewWidget, self).render(
+            name, value, attrs, **kwargs)
         return mark_safe(content + self._get_preview_tag(value))
 
     def _get_preview_tag(self, value):
