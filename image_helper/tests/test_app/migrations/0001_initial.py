@@ -16,8 +16,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TestModel',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', image_helper.fields.SizedImageField(upload_to='test_images')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
+                ('image',
+                 image_helper.fields.SizedImageField(upload_to='test_images')),
             ],
         ),
     ]
