@@ -206,10 +206,3 @@ class SizedImageField(ImageField):
             Eg. PNG or JPEG
         """
         return Image.EXTENSION[extension.lower()]
-
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^image_helper\.fields\.SizedImageField"])
-except ImportError:
-    pass
