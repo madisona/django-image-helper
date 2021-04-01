@@ -9,7 +9,7 @@ setup(
     version=VERSION,
     author="Aaron Madison",
     description="Django helpers for working with images.",
-    long_description=open('README', 'r').read(),
+    long_description=open('README.rst', 'r').read(),
     url="https://github.com/madisona/django-image-helper",
     packages=find_packages(exclude=["example"]),
     install_requires=open('requirements/requirements.txt').read().split('\n'),

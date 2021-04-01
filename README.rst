@@ -1,4 +1,5 @@
 Django Image Helper
+===================
 
 Provides a model mixin that has 'image' and 'thumbnail' fields.
 The uploaded image will be scaled to the model's 'IMAGE_SIZE' and
@@ -9,19 +10,19 @@ when in the admin's listview.
 
 RELEASE NOTES:
 
-  version 0.1.1
-  -------------
+  **version 0.1.1**
   Added AdminImagePreviewWidget. This will show a preview of the image in the
   admin change_form view in addition to the link the admin already shows.
 
-  To enable, add the following to your ModelAdmin. ::
+  To enable, add the following to your ModelAdmin.
+
+    .. code:: python
 
       formfield_overrides = {
           SizedImageField: {'widget': AdminImagePreviewWidget},
       }
 
-  version 0.1.0
-  -------------
+  **version 0.1.0**
   Added SizedImageField. This lets you do the same thing the ``ImageMixin``
   was used for, but isolates all the work to the model's field. It should
   work with any storage backend.
